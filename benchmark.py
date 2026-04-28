@@ -6,8 +6,8 @@ from sorter.hash import HashMap, HashMapID
 from sorter.trie import Trie
 
 
-RUNS = 3
-SIZES = [500, 1000, 2000, 4000, 8000]
+RUNS = 5
+SIZES = [500, 1000, 2000, 4000, 8000, 16000, 32000]
 PREFIXES = ["the", "star", "inc", "to"]
 
 
@@ -48,7 +48,7 @@ def time_exact_search_hashmap(movies, runs=RUNS):
     hm = HashMap()
     for movie in movies:
         hm.insert(movie.title.lower(), movie)
-    queries = [m.title.lower() for m in movies[:10]]
+    queries = [m.title.lower() for m in random.sample(movies, min(10, len(movies)))]
     total = 0
     for _ in range(runs):
         start = time.perf_counter()
@@ -59,7 +59,7 @@ def time_exact_search_hashmap(movies, runs=RUNS):
 
 
 def time_exact_search_linear(movies, runs=RUNS):
-    queries = [m.title.lower() for m in movies[:10]]
+    queries = [m.title.lower() for m in random.sample(movies, min(10, len(movies)))]
     total = 0
     for _ in range(runs):
         start = time.perf_counter()
@@ -185,7 +185,7 @@ def main():
     # ------------------------------------------------------------------
     # Insertion benchmarks (scaling)
     # ------------------------------------------------------------------
-    print("=== Insertion Time (avg of 3 runs, seconds) ===")
+    print("=== Insertion Time (avg of 5 runs, seconds) ===")
     header = f"{'Size':<8}{'HashMap+HashMapID':<22}{'Trie':<18}"
     print(header)
     print("-" * len(header))
@@ -215,7 +215,7 @@ def main():
     # ------------------------------------------------------------------
     # Exact search benchmarks (scaling)
     # ------------------------------------------------------------------
-    print("=== Exact Search Time per Query (avg of 3 runs, seconds) ===")
+    print("=== Exact Search Time per Query (avg of 5 runs, seconds) ===")
     header = f"{'Size':<8}{'HashMap':<18}{'Linear Scan':<18}"
     print(header)
     print("-" * len(header))
@@ -263,7 +263,7 @@ def main():
     # Prefix search benchmarks
     # ------------------------------------------------------------------
     for prefix in PREFIXES:
-        print(f"=== Prefix Search '{prefix}' (avg of 3 runs, seconds) ===")
+        print(f"=== Prefix Search '{prefix}' (avg of {RUNS} runs, seconds) ===")
         header = f"{'Size':<8}{'Trie':<18}{'Linear Scan':<18}"
         print(header)
         print("-" * len(header))

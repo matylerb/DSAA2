@@ -1,3 +1,4 @@
+import random
 import time
 import matplotlib.pyplot as plt
 
@@ -6,8 +7,8 @@ from sorter.hash import HashMap
 from sorter.trie import Trie
 
 
-SIZES = [500, 1000, 2000, 4000, 8000]
-RUNS = 3
+SIZES = [500, 1000, 2000, 4000, 8000, 16000, 32000]
+RUNS = 5
 PREFIX = "the"
 
 
@@ -30,7 +31,7 @@ def time_exact_hashmap(movies, runs=RUNS):
     hm = HashMap()
     for movie in movies:
         hm.insert(movie.title.lower(), movie)
-    queries = [m.title.lower() for m in movies[:20]]
+    queries = [m.title.lower() for m in random.sample(movies, min(20, len(movies)))]
     total = 0
     for _ in range(runs):
         start = time.perf_counter()
@@ -41,7 +42,7 @@ def time_exact_hashmap(movies, runs=RUNS):
 
 
 def time_exact_linear(movies, runs=RUNS):
-    queries = [m.title.lower() for m in movies[:20]]
+    queries = [m.title.lower() for m in random.sample(movies, min(20, len(movies)))]
     total = 0
     for _ in range(runs):
         start = time.perf_counter()
